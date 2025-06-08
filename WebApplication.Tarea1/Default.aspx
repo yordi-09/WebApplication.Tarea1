@@ -4,41 +4,34 @@
 
     <main>
         <section class="row" aria-labelledby="aspnetTitle">
-            <h1 id="aspnetTitle">ASP.NET</h1>
-            <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS, and JavaScript.</p>
-            <p><a href="http://www.asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
+            <h1 id="aspnetTitle">Formulario para tarea #1</h1>
         </section>
 
         <div class="row">
-            <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-                <h2 id="gettingStartedTitle">Getting started</h2>
-                <p>
-                    ASP.NET Web Forms lets you build dynamic websites using a familiar drag-and-drop, event-driven model.
-                A design surface and hundreds of controls and components let you rapidly build sophisticated, powerful UI-driven sites with data access.
-                </p>
-                <p>
-                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301948">Learn more &raquo;</a>
-                </p>
-            </section>
-            <section class="col-md-4" aria-labelledby="librariesTitle">
-                <h2 id="librariesTitle">Get more libraries</h2>
-                <p>
-                    NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.
-                </p>
-                <p>
-                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301949">Learn more &raquo;</a>
-                </p>
-            </section>
-            <section class="col-md-4" aria-labelledby="hostingTitle">
-                <h2 id="hostingTitle">Web Hosting</h2>
-                <p>
-                    You can easily find a web hosting company that offers the right mix of features and price for your applications.
-                </p>
-                <p>
-                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301950">Learn more &raquo;</a>
-                </p>
-            </section>
+            <asp:Panel ID="PanelFormulario" runat="server" CssClass="form-group" style="margin-top:30px;">
+                <h3>Formulario de Registro</h3>
+                <asp:Label ID="LabelNombre" runat="server" Text="Nombre:" AssociatedControlID="TextBoxNombre" />
+                <asp:TextBox ID="TextBoxNombre" runat="server" CssClass="form-control" ClientIDMode="Static" />
+                <span id="ErrorNombre" style="color: red; display: block;"></span>
+                <br />
+                <asp:Label ID="LabelCorreo" runat="server" Text="Correo electrónico:" AssociatedControlID="TextBoxCorreo" />
+                <asp:TextBox ID="TextBoxCorreo" runat="server" CssClass="form-control" ClientIDMode="Static"/>
+                <span id="ErrorCorreo" style="color: red; display: block;"></span>
+                <br />
+                <asp:Button ID="ButtonEnviar" runat="server" Text="Enviar" CssClass="btn btn-primary" OnClick="ButtonEnviar_Click" ClientIDMode="Static" />
+            </asp:Panel>
+
+            <asp:Panel ID="PanelTabla" runat="server" Style="margin-top: 30px;">
+                <asp:GridView ID="GridViewDatos" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered">
+                    <Columns>
+                        <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
+                        <asp:BoundField DataField="Correo" HeaderText="Correo electrónico" />
+                    </Columns>
+                </asp:GridView>
+            </asp:Panel>
         </div>
     </main>
 
+    <script src="Scripts/jquery-3.7.0.min.js"></script>
+    <script src="Scripts/Formulario.js"></script>
 </asp:Content>
