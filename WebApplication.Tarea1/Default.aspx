@@ -3,10 +3,6 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
     <main>
-        <section class="row" aria-labelledby="aspnetTitle">
-            <h1 id="aspnetTitle">Formulario para tarea #1</h1>
-        </section>
-
         <div class="row">
             <asp:Panel ID="PanelFormulario" runat="server" CssClass="form-group" style="margin-top:30px;">
                 <h3>Formulario de Registro</h3>
@@ -18,16 +14,20 @@
                 <asp:TextBox ID="TextBoxCorreo" runat="server" CssClass="form-control" ClientIDMode="Static"/>
                 <span id="ErrorCorreo" style="color: red; display: block;"></span>
                 <br />
-                <asp:Button ID="ButtonEnviar" runat="server" Text="Enviar" CssClass="btn btn-primary" OnClick="ButtonEnviar_Click" ClientIDMode="Static" />
+                <asp:Button ID="ButtonEnviar" runat="server" Text="Enviar" CssClass="btn btn-primary" ClientIDMode="Static" />
             </asp:Panel>
 
             <asp:Panel ID="PanelTabla" runat="server" Style="margin-top: 30px;">
-                <asp:GridView ID="GridViewDatos" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered">
-                    <Columns>
-                        <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
-                        <asp:BoundField DataField="Correo" HeaderText="Correo electrónico" />
-                    </Columns>
-                </asp:GridView>
+                <table id="GridViewDatos" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Correo electrónico</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </asp:Panel>
         </div>
     </main>

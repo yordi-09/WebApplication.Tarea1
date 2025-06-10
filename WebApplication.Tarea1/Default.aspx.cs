@@ -1,56 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
+using System.Web.Script.Serialization;
+using System.Web.Services;
 using System.Web.UI;
 
 namespace WebApplication.Tarea1
 {
     public partial class _Default : Page
     {
-        private List<string[]> DatosIngresados
+        protected void Page_Load(object sender, EventArgs e) { }
+
+        [WebMethod]
+        public static string GuardarUsuario(string nombre, string correo)
         {
-            get
+            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                // Usar ViewState para mantener los datos entre postbacks
-                if (ViewState["DatosIngresados"] == null)
-                    ViewState["DatosIngresados"] = new List<string[]>();
-                return (List<string[]>)ViewState["DatosIngresados"];
+                string query = "INSERT INTO Usuarios (Nombre, Correo) VALUES (@Nombre, @Correo)";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Nombre", nombre);
+                    cmd.Parameters.AddWithValue("@Correo", correo);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
             }
-            set
-            {
-                ViewState["DatosIngresados"] = value;
-            }
+            return "OK";
         }
 
-        protected void Page_Load(object sender, EventArgs e)
+        [WebMethod]
+        public static string ObtenerUsuarios()
         {
-            if (!IsPostBack)
+            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            var usuarios = new List<object>();
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                GridViewDatos.DataSource = DatosIngresados;
-                GridViewDatos.DataBind();
+                string query = "SELECT Nombre, Correo FROM Usuarios";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            usuarios.Add(new
+                            {
+                                Nombre = reader["Nombre"].ToString(),
+                                Correo = reader["Correo"].ToString()
+                            });
+                        }
+                    }
+                }
             }
-        }
-
-        protected void ButtonEnviar_Click(object sender, EventArgs e)
-        {
-            string nombre = TextBoxNombre.Text.Trim();
-            string correo = TextBoxCorreo.Text.Trim();
-
-            // Validar que no estén vacíos
-            if (!string.IsNullOrEmpty(nombre) && !string.IsNullOrEmpty(correo))
-            {
-                // Agregar los datos a la lista
-                var lista = DatosIngresados;
-                lista.Add(new string[] { nombre, correo });
-                DatosIngresados = lista;
-
-                // Actualizar el GridView
-                GridViewDatos.DataSource = DatosIngresados;
-                GridViewDatos.DataBind();
-
-                // Limpiar los campos
-                TextBoxNombre.Text = "";
-                TextBoxCorreo.Text = "";
-            }
+            return new JavaScriptSerializer().Serialize(usuarios);
         }
     }
 }
