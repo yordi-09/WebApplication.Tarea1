@@ -4,7 +4,7 @@ $(function () {
     $('#ButtonEnviar').click(function (e) {
         e.preventDefault();
 
-        $('#ErrorGeneral').html(''); // Limpiar mensaje general
+        $('#ErrorGeneral').html('');
 
         var nombre = $('#TextBoxNombre').val().trim();
         var correo = $('#TextBoxCorreo').val().trim();
