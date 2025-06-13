@@ -15,6 +15,8 @@
                 <span id="ErrorCorreo" style="color: red; display: block;"></span>
                 <br />
                 <asp:Button ID="ButtonEnviar" runat="server" Text="Enviar" CssClass="btn btn-primary" ClientIDMode="Static" />
+
+                <span id="ErrorGeneral" style="color: red; display: block; margin-top: 10px;"></span>
             </asp:Panel>
 
             <asp:Panel ID="PanelTabla" runat="server" Style="margin-top: 30px;">

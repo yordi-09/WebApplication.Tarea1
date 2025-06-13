@@ -13,28 +13,10 @@ namespace WebApplication.Tarea1
         protected void Page_Load(object sender, EventArgs e) { }
 
         [WebMethod]
-        public static string GuardarUsuario(string nombre, string correo)
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string query = "INSERT INTO Usuarios (Nombre, Correo) VALUES (@Nombre, @Correo)";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@Nombre", nombre);
-                    cmd.Parameters.AddWithValue("@Correo", correo);
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
-                }
-            }
-            return "OK";
-        }
-
-        [WebMethod]
         public static string ObtenerUsuarios()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            var usuarios = new List<object>();
+            var usuarios = new List<Usuario>();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 string query = "SELECT Nombre, Correo FROM Usuarios";
@@ -45,7 +27,7 @@ namespace WebApplication.Tarea1
                     {
                         while (reader.Read())
                         {
-                            usuarios.Add(new
+                            usuarios.Add(new Usuario
                             {
                                 Nombre = reader["Nombre"].ToString(),
                                 Correo = reader["Correo"].ToString()
@@ -54,7 +36,34 @@ namespace WebApplication.Tarea1
                     }
                 }
             }
+
             return new JavaScriptSerializer().Serialize(usuarios);
+        }
+
+        [WebMethod]
+        public static string GuardarUsuario(string nombre, string correo)
+        {
+            try
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    string query = "INSERT INTO Usuarios (Nombre, Correo) VALUES (@Nombre, @Correo)";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Nombre", nombre);
+                        cmd.Parameters.AddWithValue("@Correo", correo);
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                return new JavaScriptSerializer().Serialize(new { success = true });
+            }
+
+            catch (Exception ex)
+            {
+                return new JavaScriptSerializer().Serialize(new { success = false, error = ex.Message });
+            }
         }
     }
 }

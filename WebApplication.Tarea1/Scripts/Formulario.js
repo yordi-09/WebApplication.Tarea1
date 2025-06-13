@@ -4,6 +4,8 @@ $(function () {
     $('#ButtonEnviar').click(function (e) {
         e.preventDefault();
 
+        $('#ErrorGeneral').html(''); // Limpiar mensaje general
+
         var nombre = $('#TextBoxNombre').val().trim();
         var correo = $('#TextBoxCorreo').val().trim();
         var correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -35,13 +37,17 @@ $(function () {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (response) {
-                $('#TextBoxNombre').val('');
-                $('#TextBoxCorreo').val('');
-
-                cargarUsuarios();
+                var res = JSON.parse(response.d);
+                if (res.success) {
+                    $('#TextBoxNombre').val('');
+                    $('#TextBoxCorreo').val('');
+                    cargarUsuarios();
+                } else {
+                    $('#ErrorGeneral').html('Error al guardar el usuario.');
+                }
             },
             error: function () {
-                alert('Error al guardar el usuario.');
+                $('#ErrorGeneral').html('Error de comunicación con el servidor al guardar el usuario.');
             }
         });
     });
@@ -66,7 +72,8 @@ $(function () {
                 $('#GridViewDatos tbody').html(html);
             },
             error: function () {
-                alert('Error al cargar los usuarios.');
+                var html = '<tr><td colspan="2" class="text-center text-danger">Error de comunicación con el servidor.</td></tr>';
+                $('#GridViewDatos tbody').html(html);
             }
         });
     }
